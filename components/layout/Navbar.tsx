@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import SparkleIcon from "@/components/ui/SparkleIcon";
 import Button from "@/components/ui/Button";
 
@@ -41,10 +42,16 @@ export default function Navbar() {
         </div>
 
         {/* Desktop CTA */}
-        <div className="hidden md:block">
-          <Button size="sm" onClick={() => document.getElementById("hero-form")?.scrollIntoView({ behavior: "smooth" })}>
-            Join Waitlist
-          </Button>
+        <div className="hidden md:flex items-center gap-3">
+          <Link
+            href="/login"
+            className="text-sm text-wge-cream/60 hover:text-wge-cream transition-colors duration-150"
+          >
+            Sign in
+          </Link>
+          <Link href="/signup">
+            <Button size="sm">Get Started</Button>
+          </Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -93,16 +100,12 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
-            <Button
-              size="sm"
-              className="mt-2 w-full"
-              onClick={() => {
-                setIsOpen(false);
-                document.getElementById("hero-form")?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Join Waitlist
-            </Button>
+            <Link href="/login" onClick={() => setIsOpen(false)}>
+              <Button size="sm" variant="outline" className="mt-2 w-full">Sign in</Button>
+            </Link>
+            <Link href="/signup" onClick={() => setIsOpen(false)}>
+              <Button size="sm" className="w-full">Get Started</Button>
+            </Link>
           </div>
         </div>
       )}
