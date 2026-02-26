@@ -84,7 +84,13 @@ export default function LoginPage() {
         <LoginForm />
       </Suspense>
 
-      <p className="mt-6 text-center text-sm text-wge-cream/50">
+      <p className="mt-4 text-center text-sm">
+        <Link href="/forgot-password" className="text-wge-cream/40 hover:text-wge-cream transition-colors">
+          Forgot password?
+        </Link>
+      </p>
+
+      <p className="mt-4 text-center text-sm text-wge-cream/50">
         Don&apos;t have an account?{" "}
         <Link href="/signup" className="text-wge-blue hover:text-wge-purple transition-colors">
           Sign up
