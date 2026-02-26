@@ -47,6 +47,61 @@ Return a JSON array of exactly 5 comment strings. No other text.`;
   return JSON.parse(jsonStr) as string[];
 }
 
+// --- Suggestions generation (prospect outreach) ---
+
+const MOCK_SUGGESTIONS = {
+  comments: [
+    "Really interesting perspective here. I've been thinking about this exact challenge in my work — would love to connect and swap notes.",
+    "This resonates deeply. The framework you're describing is something we've been trying to operationalize at scale. Great post.",
+    "Spot on. The nuance you bring to this topic is rare on LinkedIn — following for more of this.",
+  ],
+  dm: "Hi [Name], I came across your recent post and it really resonated with me. I work in a similar space and thought it'd be great to connect. Would love to hear more about your work at [Company].",
+};
+
+export async function generateSuggestions(
+  postText: string,
+  prospectName: string,
+  prospectTitle: string | null,
+  tone: Tone = "professional"
+): Promise<{ comments: string[]; dm: string }> {
+  if (!client) {
+    return MOCK_SUGGESTIONS;
+  }
+
+  const prompt = `You are an expert LinkedIn outreach strategist. Generate 3 thoughtful comment suggestions and 1 personalized DM for engaging with a prospect's post.
+
+Prospect: ${prospectName}${prospectTitle ? ` (${prospectTitle})` : ""}
+Tone: ${tone}
+
+LinkedIn Post:
+"""
+${postText}
+"""
+
+Return a JSON object with exactly this shape:
+{
+  "comments": ["comment1", "comment2", "comment3"],
+  "dm": "dm text here"
+}
+
+Comments should be 1-3 sentences, add genuine value, and sound human — not sycophantic.
+The DM should be 2-4 sentences, reference the post, and end with a soft call-to-action.
+No other text — just the JSON object.`;
+
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 1024,
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const content = message.content[0];
+  if (content.type !== "text") throw new Error("Unexpected response type");
+
+  const raw = content.text.trim();
+  const jsonStr = raw.startsWith("{") ? raw : raw.slice(raw.indexOf("{"));
+  return JSON.parse(jsonStr) as { comments: string[]; dm: string };
+}
+
 // --- Post generation ---
 
 const MOCK_POST: Record<PostFormat, string> = {
