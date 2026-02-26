@@ -51,7 +51,7 @@ export default function ForgotPasswordPage() {
             Email sent to <span className="text-wge-cream font-medium">{email}</span>.<br />
             Click the link in the email to set a new password.
           </p>
-          <p className="text-xs text-wge-cream/30">Check your spam folder if it doesn't arrive.</p>
+          <p className="text-xs text-wge-cream/30">Check your spam folder if it doesn&apos;t arrive.</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
