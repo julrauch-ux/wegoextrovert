@@ -1,28 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 
-interface WaitlistEntry {
-  email: string;
-  joinedAt: string;
-}
-
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// ---------- Vercel KV (production) ----------
-async function kvSignup(email: string): Promise<"added" | "exists"> {
-  const { kv } = await import("@vercel/kv");
-  const isMember = await kv.sismember("waitlist:emails", email);
-  if (isMember) return "exists";
-  await kv.sadd("waitlist:emails", email);
-  await kv.rpush(
-    "waitlist:entries",
-    JSON.stringify({ email, joinedAt: new Date().toISOString() } satisfies WaitlistEntry)
+// ---------- Supabase (production + local with env vars) ----------
+async function supabaseSignup(email: string): Promise<"added" | "exists"> {
+  const { createClient } = await import("@supabase/supabase-js");
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
+
+  const { data: existing } = await supabase
+    .from("waitlist")
+    .select("id")
+    .eq("email", email)
+    .maybeSingle();
+
+  if (existing) return "exists";
+
+  const { error } = await supabase.from("waitlist").insert({ email });
+  if (error) throw error;
+
   return "added";
 }
 
-// ---------- Local JSON fallback (dev) ----------
+// ---------- Local JSON fallback (dev without env vars) ----------
 async function localSignup(email: string): Promise<"added" | "exists"> {
   const { readFileSync, writeFileSync, mkdirSync, existsSync } = await import("node:fs");
   const { join } = await import("node:path");
@@ -30,10 +34,10 @@ async function localSignup(email: string): Promise<"added" | "exists"> {
   const dataDir = join(process.cwd(), "data");
   const dataFile = join(dataDir, "waitlist.json");
 
-  let entries: WaitlistEntry[] = [];
+  let entries: { email: string; joinedAt: string }[] = [];
   try {
     if (existsSync(dataFile)) {
-      entries = JSON.parse(readFileSync(dataFile, "utf-8")) as WaitlistEntry[];
+      entries = JSON.parse(readFileSync(dataFile, "utf-8"));
     }
   } catch {
     entries = [];
@@ -81,8 +85,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const useKv = Boolean(process.env.KV_REST_API_URL);
-    const result = useKv ? await kvSignup(raw) : await localSignup(raw);
+    const useSupabase = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+    const result = useSupabase ? await supabaseSignup(raw) : await localSignup(raw);
 
     if (result === "exists") {
       return NextResponse.json(
