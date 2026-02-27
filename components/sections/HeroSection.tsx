@@ -1,6 +1,7 @@
+import Link from "next/link";
 import SparkleIcon from "@/components/ui/SparkleIcon";
-import WaitlistForm from "@/components/ui/WaitlistForm";
 import ArcDecoration from "@/components/ui/ArcDecoration";
+import Button from "@/components/ui/Button";
 
 export default function HeroSection() {
   return (
@@ -27,7 +28,7 @@ export default function HeroSection() {
         <div className="inline-flex items-center gap-2 rounded-full border border-wge-blue/30 bg-wge-blue/5 px-4 py-1.5 mb-8 animate-fadeUp">
           <SparkleIcon size={12} className="text-wge-blue" />
           <span className="text-xs font-medium text-wge-blue tracking-wide uppercase">
-            Early Access — Join the Waitlist
+            Now Live — Start Growing Today
           </span>
         </div>
 
@@ -44,19 +45,24 @@ export default function HeroSection() {
           matters.
         </p>
 
-        {/* Waitlist Form */}
-        <div
-          id="hero-form"
-          className="flex justify-center mb-8 opacity-0 animate-fadeUp-delay-3"
-        >
-          <WaitlistForm variant="hero" />
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 opacity-0 animate-fadeUp-delay-3">
+          <Link href="/signup">
+            <Button size="lg" className="w-full sm:w-auto px-8">
+              Get Started Free
+            </Button>
+          </Link>
+          <Link
+            href="/login"
+            className="text-sm text-wge-cream/60 hover:text-wge-cream transition-colors duration-150"
+          >
+            Already have an account? Sign in &rarr;
+          </Link>
         </div>
 
         {/* Social proof */}
         <p className="text-sm text-wge-cream/40 opacity-0 animate-fadeUp-delay-3">
-          Join{" "}
-          <span className="text-wge-cream/70 font-medium">500+ professionals</span>{" "}
-          already on the waitlist &mdash; no credit card required
+          No credit card required &bull; Set up in under 2 minutes
         </p>
       </div>
     </section>

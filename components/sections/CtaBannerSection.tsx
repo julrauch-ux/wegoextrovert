@@ -1,6 +1,7 @@
+import Link from "next/link";
 import SparkleIcon from "@/components/ui/SparkleIcon";
-import WaitlistForm from "@/components/ui/WaitlistForm";
 import ArcDecoration from "@/components/ui/ArcDecoration";
+import Button from "@/components/ui/Button";
 
 export default function CtaBannerSection() {
   return (
@@ -36,16 +37,24 @@ export default function CtaBannerSection() {
         </h2>
 
         <p className="text-lg text-wge-cream/50 mb-10 max-w-xl mx-auto">
-          Join hundreds of professionals already on the waitlist. Be first to access
-          wge when we launch.
+          Start building your LinkedIn presence today — AI-powered, fully automated, and built for results.
         </p>
 
-        <div className="flex justify-center">
-          <WaitlistForm variant="banner" />
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link href="/signup">
+            <Button size="lg" className="w-full sm:w-auto px-10">
+              Get Started Free
+            </Button>
+          </Link>
+          <Link href="/login">
+            <Button size="lg" variant="outline" className="w-full sm:w-auto px-10">
+              Sign in
+            </Button>
+          </Link>
         </div>
 
-        <p className="mt-4 text-xs text-wge-cream/30">
-          No credit card required &bull; Cancel anytime &bull; Early bird pricing locked in
+        <p className="mt-6 text-xs text-wge-cream/30">
+          No credit card required &bull; Cancel anytime
         </p>
       </div>
     </section>

@@ -11,7 +11,7 @@ const plans = [
       "Basic growth analytics",
       "Email support",
     ],
-    cta: "Join Waitlist",
+    cta: "Get Started",
     highlighted: false,
   },
   {
@@ -26,7 +26,7 @@ const plans = [
       "Scheduled publishing",
       "Priority support",
     ],
-    cta: "Join Waitlist",
+    cta: "Get Started",
     highlighted: true,
     badge: "Most Popular",
   },
@@ -42,7 +42,7 @@ const plans = [
       "Custom AI voice training",
       "Dedicated account manager",
     ],
-    cta: "Join Waitlist",
+    cta: "Get Started",
     highlighted: false,
   },
 ];
@@ -61,7 +61,7 @@ export default function PricingSection() {
             <span className="text-gradient">transparent pricing</span>
           </h2>
           <p className="mt-4 text-wge-cream/50">
-            Early waitlist members get 50% off for their first 3 months.
+            Start for free. Upgrade when you&apos;re ready.
           </p>
         </div>
 
@@ -103,7 +103,7 @@ export default function PricingSection() {
 
               {/* CTA */}
               <a
-                href="#hero-form"
+                href="/signup"
                 className={clsx(
                   "block w-full text-center rounded-full py-3 text-sm font-semibold transition-all duration-200 mb-6",
                   plan.highlighted
